@@ -1,0 +1,6 @@
+inteiro a = 2;
+inteiro b = 4;
+enquanto(b !! 5){
+	b = a + 1;
+}
+finalizado;
