@@ -54,15 +54,15 @@ g++ pilheitor.cpp -o pilheitor
 
 #### 2. Execução
 
-Para compilar um código-fonte, execute o compilador. O exemplo abaixo usa o arquivo `teste1.txt`, mas há também um `teste2.txt` que contém um erro sintático e, ao executá-lo, uma mensagem de erro será exibida:
+Para compilar um código-fonte, execute o compilador. O exemplo abaixo usa o arquivo `teste1`, mas há também um `teste2` que contém um erro sintático e, ao compila-lo, uma mensagem de erro será exibida:
 
 ```bash
-./compilador teste1.txt
+./compilador teste1
 ```
 
 Isso gerará um arquivo de instruções que pode ser executado pela máquina virtual.
 
-## Código do Arquivo `teste1.txt`
+## Código do Arquivo `teste1`
 
 ```plaintext
 inteiro a = 2;
