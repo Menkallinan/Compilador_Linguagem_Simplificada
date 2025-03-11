@@ -4,7 +4,7 @@
 #include <string.h>
 
 extern int yylex();
-extern void yyerror(char *s);
+extern void yyerror(const char *s);
 
 int pilha[1023] = {0};
 int posicao_atual = 0;
@@ -41,7 +41,7 @@ void alocar_simbolo(char *simbolo) {
         }
         i++;
     }
-    tabela_simbolo[i] = simbolo;
+    tabela_simbolo[i] = strdup(simbolo); // Duplica a string para evitar problemas com o buffer do Flex
 }
 
 %}
@@ -98,7 +98,6 @@ fator: NUM { printf("PUSH %d\n", $1); }
      | LPAR expressao RPAR
      | ID { printf("PUSH %%%d\n", get_endereco($1)); };
 
-
 condicional: SE
              LPAR 
              expressao_laco_selecao {empilhar_rotulo();int rotulo_se = pilha[posicao_atual - 1];printf("GFALSE R0%d\n", rotulo_se); }
@@ -110,7 +109,6 @@ condicional: SE
 
 possivel_senao: | 
 		SENAO LCHAVES comandos RCHAVES {empilhar_rotulo();int rotulo_fim_senao = pilha[posicao_atual - 1];printf("GOTO R0%d\n", rotulo_fim_senao);printf("R0%d: NADA\n", pilha[posicao_atual - 2]);desempilhar_rotulo();};
-
 
 expressao_laco_selecao: ID { printf("PUSH %%%d\n", get_endereco($1));} IGUAL expressao { printf("IGUAL\n"); }
                        | ID { printf("PUSH %%%d\n", get_endereco($1));} MAIOR expressao { printf("MAIOR\n"); }
@@ -144,8 +142,15 @@ int main(int argc, char *argv[]) {
     yyin = fopen(argv[1], "r");
     yyparse();
     fclose(yyin);
+
+    // Libera a memória alocada para os símbolos
+    for (int i = 0; i < 1023; i++) {
+        if (tabela_simbolo[i] != NULL) {
+            free(tabela_simbolo[i]);
+        }
+    }
+
     return 0;
 }
 
-void yyerror(char *s) { fprintf(stderr, "ERROR: %s\n", s); }
-
+void yyerror(const char *s) { fprintf(stderr, "ERROR: %s\n", s); }
